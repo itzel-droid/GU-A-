@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guía Caja SISE — Quálitas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&amp;family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple-900:#3E0F35;
+    --purple-800:#5A1249;
+    --purple-700:#6E1958;
+    --purple-500:#9C2E82;
+    --purple-200:#E9D3E3;
+    --teal-600:#00847E;
+    --teal-500:#00A19A;
+    --teal-300:#7CD6D0;
+    --amber-600:#B96E00;
+    --amber-100:#FBEAD0;
+    --bg:#F6F3F8;
+    --surface:#FFFFFF;
+    --surface-soft:#FBF9FC;
+    --ink:#241726;
+    --ink-soft:#6B5C6E;
+    --line:#E5DEE9;
+    --danger:#A32B3F;
+    --danger-bg:#FCE9EC;
+    --ok:#1C7A52;
+    --ok-bg:#E4F5EC;
+    --radius:16px;
+    --shadow: 0 1px 2px rgba(62,15,53,.04), 0 8px 24px -12px rgba(62,15,53,.18);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  h1,h2,h3,h4{font-family:'Fraunces',serif; margin:0; letter-spacing:-.01em;}
+  ::selection{background:var(--teal-300); color:var(--purple-900);}
+
+  /* ============ LAYOUT ============ */
+  .app{display:flex; min-height:100vh;}
+
+  /* ---- SIDEBAR ---- */
+  .sidebar{
+    width:250px; flex-shrink:0;
+    background:linear-gradient(185deg, var(--purple-800), var(--purple-900) 85%);
+    color:#fff;
+    display:flex; flex-direction:column;
+    position:sticky; top:0; height:100vh;
+    padding:22px 14px 18px;
+  }
+  .brand{display:flex; align-items:center; gap:10px; padding:4px 8px 20px; border-bottom:1px solid rgba(255,255,255,.14); margin-bottom:14px;}
+  .brand-mark{
+    width:34px; height:34px; border:2px solid #fff; border-radius:9px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Fraunces',serif; font-weight:700; font-size:19px; flex-shrink:0;
+    position:relative; overflow:hidden;
+  }
+  .brand-mark::after{content:''; position:absolute; bottom:-9px; right:-11px; width:22px; height:12px; background:var(--teal-500); border-radius:50%; transform:rotate(-28deg);}
+  .brand-text{line-height:1.15;}
+  .brand-text b{display:block; font-family:'Fraunces',serif; font-size:15.5px; font-weight:600;}
+  .brand-text span{font-size:10.5px; color:var(--teal-300); text-transform:uppercase; letter-spacing:.08em;}
+
+  nav.tabs{display:flex; flex-direction:column; gap:2px; flex:1; overflow-y:auto;}
+  .tab-btn{
+    display:flex; align-items:center; gap:11px;
+    background:transparent; border:none; color:rgba(255,255,255,.78);
+    font-family:'Inter',sans-serif; font-size:13.6px; font-weight:600;
+    text-align:left; padding:10px 12px; border-radius:10px; cursor:pointer;
+    transition:background .15s ease, color .15s ease;
+  }
+  .tab-btn .ico{width:18px; text-align:center; flex-shrink:0; font-size:15px;}
+  .tab-btn:hover{background:rgba(255,255,255,.08); color:#fff;}
+  .tab-btn.active{background:var(--teal-500); color:#fff; box-shadow:0 4px 14px -4px rgba(0,161,154,.7);}
+  .tab-note{margin-top:14px; padding:12px 12px; border-radius:10px; background:rgba(255,255,255,.07); font-size:11px; color:rgba(255,255,255,.65); line-height:1.5;}
+
+  /* ---- MAIN ---- */
+  main{flex:1; min-width:0; display:flex; flex-direction:column;}
+  .topbar{
+    position:sticky; top:0; z-index:20;
+    background:rgba(246,243,248,.9); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+    padding:16px 34px; display:flex; align-items:center; gap:16px;
+  }
+  .search-wrap{position:relative; flex:1; max-width:460px;}
+  .search-wrap input{
+    width:100%; padding:10px 14px 10px 38px; border-radius:11px; border:1.5px solid var(--line);
+    background:#fff; font-family:'Inter',sans-serif; font-size:13.5px; color:var(--ink);
+    outline:none; transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  .search-wrap input:focus{border-color:var(--teal-500); box-shadow:0 0 0 3px rgba(0,161,154,.15);}
+  .search-wrap svg{position:absolute; left:12px; top:50%; transform:translateY(-50%); opacity:.45;}
+  .search-count{font-size:11.5px; color:var(--ink-soft); white-space:nowrap; display:none;}
+  .page-title{font-size:12px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.09em; font-weight:700; margin-left:auto; flex-shrink:0;}
+  .search-nav{display:flex; align-items:center; gap:4px; flex-shrink:0;}
+  .search-nav button{width:26px; height:26px; border-radius:7px; border:1px solid var(--line); background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:11px; color:var(--ink-soft); transition:border-color .15s ease, color .15s ease;}
+  .search-nav button:hover{border-color:var(--teal-500); color:var(--teal-600);}
+  .topbar-actions{display:flex; align-items:center; gap:8px; flex-shrink:0;}
+  .icon-btn{
+    display:inline-flex; align-items:center; gap:6px; font-family:'Inter',sans-serif; font-size:12.5px; font-weight:600;
+    padding:8px 13px; border-radius:10px; border:1.5px solid var(--line); background:#fff; cursor:pointer; color:var(--ink);
+    transition:border-color .15s ease, color .15s ease, background .15s ease; white-space:nowrap;
+  }
+  .icon-btn:hover{border-color:var(--teal-500); color:var(--teal-600);}
+  .icon-btn.active{background:var(--amber-600); border-color:var(--amber-600); color:#fff;}
+
+  mark.hit{background:#FCE28A; color:var(--purple-900); border-radius:3px; padding:0 2px; scroll-margin-top:120px;}
+
+  @keyframes searchPulse{
+    0%{box-shadow:0 0 0 0 rgba(0,161,154,.55);}
+    70%{box-shadow:0 0 0 16px rgba(0,161,154,0);}
+    100%{box-shadow:0 0 0 0 rgba(0,161,154,0);}
+  }
+  .search-target{animation:searchPulse 1s ease-out 2; border-color:var(--teal-500) !important; scroll-margin-top:110px;}
+
+  body.edit-mode table td{cursor:text; transition:background .12s ease;}
+  body.edit-mode table td:hover{background:#FBF3EE; outline:1.5px dashed var(--amber-600); outline-offset:-2px;}
+  body.edit-mode table td:focus{background:#FFF7E8; outline:1.5px solid var(--amber-600); outline-offset:-2px;}
+  .edit-banner{display:none; align-items:center; gap:8px; background:var(--amber-100); color:var(--amber-600); font-size:12px; font-weight:600; padding:9px 34px; border-bottom:1px solid #F0D19B;}
+  body.edit-mode .edit-banner{display:flex;}
+
+  .content{padding:30px 34px 90px; max-width:1080px; width:100%; margin:0 auto;}
+  .view{display:none; animation:fadeUp .35s ease;}
+  .view.active{display:block;}
+  @keyframes fadeUp{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+
+  .view-head{margin-bottom:26px;}
+  .eyebrow{display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:var(--teal-600); margin-bottom:8px;}
+  .eyebrow::before{content:''; width:16px; height:2px; background:var(--teal-500); border-radius:2px;}
+  .view-head h1{font-size:29px; font-weight:600; color:var(--purple-900);}
+  .view-head p{margin-top:8px; color:var(--ink-soft); font-size:14.5px; max-width:640px; line-height:1.55;}
+
+  /* ---- CARDS ---- */
+  .card{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+    padding:20px 22px; box-shadow:var(--shadow); margin-bottom:16px;
+    transition:box-shadow .2s ease, transform .2s ease;
+  }
+  .card h3{font-size:16.5px; font-weight:600; color:var(--purple-800); margin-bottom:10px; display:flex; align-items:center; gap:8px;}
+  .card p{font-size:13.6px; line-height:1.62; color:#3c2f3e; margin:0 0 8px;}
+  .card ul{margin:6px 0 0; padding-left:20px; font-size:13.4px; line-height:1.68; color:#3c2f3e;}
+  .card ul li{margin-bottom:3px;}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px;}
+  @media(max-width:820px){.grid2,.grid3{grid-template-columns:1fr;}}
+
+  /* search hide */
+  [data-searchable].hide{display:none !important;}
+
+  mark{background:#FCE28A; color:var(--purple-900); border-radius:3px; padding:0 2px;}
+
+  /* ---- TABLE ---- */
+  table{width:100%; border-collapse:collapse; font-size:13px; margin-top:6px;}
+  thead th{
+    text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em;
+    color:var(--purple-700); border-bottom:2px solid var(--purple-200); padding:8px 10px; font-weight:700;
+  }
+  tbody td{padding:9px 10px; border-bottom:1px solid var(--line); color:#3c2f3e;}
+  tbody tr:hover td{background:var(--surface-soft);}
+  tbody tr:last-child td{border-bottom:none;}
+  .mono{font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:-.01em;}
+  .table-scroll{overflow-x:auto;}
+
+  /* ---- BADGES / CHIPS ---- */
+  .chip{
+    display:inline-flex; align-items:center; gap:6px; font-family:'JetBrains Mono',monospace;
+    font-size:11.5px; font-weight:600; background:var(--purple-200); color:var(--purple-800);
+    padding:5px 10px; border-radius:8px; white-space:nowrap;
+  }
+  .chip .arrow{color:var(--teal-600); font-weight:700;}
+  .chip-teal{background:#DCF3F1; color:var(--teal-600);}
+
+  .tag{display:inline-block; font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; padding:3px 9px; border-radius:20px;}
+  .tag-req{background:var(--danger-bg); color:var(--danger);}
+  .tag-ok{background:var(--ok-bg); color:var(--ok);}
+  .tag-info{background:#E4E9FB; color:#31469B;}
+  .tag-amber{background:var(--amber-100); color:var(--amber-600);}
+
+  /* ---- CALLOUT ---- */
+  .callout{border-radius:14px; padding:16px 18px; margin:14px 0; border:1.5px solid; display:flex; gap:12px;}
+  .callout .cico{font-size:19px; line-height:1; flex-shrink:0;}
+  .callout h4{font-size:13.5px; margin-bottom:4px;}
+  .callout p, .callout ul{font-size:13px; margin:0; color:inherit; opacity:.92;}
+  .callout-warn{background:var(--amber-100); border-color:#F0D19B; color:#7A4A00;}
+  .callout-danger{background:var(--danger-bg); border-color:#F2C3CC; color:#7C1B2C;}
+  .callout-ok{background:var(--ok-bg); border-color:#BFE6D2; color:#155F41;}
+  .callout-info{background:#E9EEFC; border-color:#C9D3F5; color:#2C3B85;}
+
+  /* ---- PROCESS MAP (signature element) ---- */
+  .map-scroll{overflow-x:auto; padding:10px 4px 22px;}
+  .map{display:flex; align-items:flex-start; min-width:max-content; padding:6px 6px 0;}
+  .map-node{width:150px; text-align:center; cursor:pointer; position:relative; flex-shrink:0;}
+  .map-node .dot{
+    width:46px; height:46px; margin:0 auto 10px; border-radius:50%;
+    background:var(--surface); border:2.5px solid var(--purple-500); color:var(--purple-700);
+    display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif; font-weight:700; font-size:17px;
+    transition:transform .18s ease, background .18s ease, color .18s ease, box-shadow .18s ease;
+    position:relative; z-index:2;
+  }
+  .map-node:hover .dot{transform:translateY(-4px) scale(1.06); background:var(--teal-500); border-color:var(--teal-500); color:#fff; box-shadow:0 10px 18px -8px rgba(0,161,154,.6);}
+  .map-node .lbl{font-size:11.5px; font-weight:600; color:var(--ink); line-height:1.3; padding:0 4px;}
+  .map-node .sub{font-size:10px; color:var(--ink-soft); margin-top:2px;}
+  .map-line{height:2.5px; background:var(--purple-200); flex:1; margin-top:23px; min-width:26px;}
+
+  /* ---- STEPPER (accordion) ---- */
+  .stepper{counter-reset:step;}
+  .step{background:var(--surface); border:1px solid var(--line); border-radius:14px; margin-bottom:12px; overflow:hidden; box-shadow:var(--shadow);}
+  .step-head{
+    display:flex; align-items:center; gap:14px; padding:16px 20px; cursor:pointer; user-select:none;
+  }
+  .step-num{
+    width:34px; height:34px; border-radius:50%; background:var(--purple-700); color:#fff; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif; font-weight:700; font-size:15px;
+  }
+  .step-head h3{font-size:15.5px; font-weight:600; color:var(--purple-900); flex:1;}
+  .step-chevron{transition:transform .25s ease; color:var(--ink-soft); flex-shrink:0;}
+  .step.open .step-chevron{transform:rotate(180deg);}
+  .step-body{max-height:0; overflow:hidden; transition:max-height .3s ease;}
+  .step-body-inner{padding:0 20px 20px 68px;}
+  .step-body-inner p{font-size:13.4px; line-height:1.62; color:#3c2f3e; margin:0 0 8px;}
+  .step-body-inner ul{margin:4px 0 10px; padding-left:19px; font-size:13.3px; line-height:1.65; color:#3c2f3e;}
+  .step-body-inner li{margin-bottom:4px;}
+  .step-route{margin-bottom:10px;}
+
+  /* ---- GLOSSARY ---- */
+  .gloss-item{display:flex; gap:14px; padding:13px 0; border-bottom:1px solid var(--line);}
+  .gloss-item:last-child{border-bottom:none;}
+  .gloss-term{width:150px; flex-shrink:0; font-family:'JetBrains Mono',monospace; font-weight:600; font-size:12.5px; color:var(--purple-700); padding-top:1px;}
+  .gloss-def{font-size:13.3px; color:#3c2f3e; line-height:1.55;}
+
+  /* ---- QUICK PATHS ---- */
+  .path-row{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 0; border-bottom:1px solid var(--line);}
+  .path-row:last-child{border-bottom:none;}
+  .path-label{font-size:13px; color:#3c2f3e; font-weight:500;}
+
+  footer{text-align:center; padding:26px; color:var(--ink-soft); font-size:11.5px;}
+
+  /* scrollbar */
+  nav.tabs::-webkit-scrollbar, .map-scroll::-webkit-scrollbar{height:6px; width:6px;}
+  nav.tabs::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2); border-radius:6px;}
+  .map-scroll::-webkit-scrollbar-thumb{background:var(--purple-200); border-radius:6px;}
+
+  @media(max-width:900px){
+    .sidebar{position:fixed; z-index:40; transform:translateX(-100%); transition:transform .25s ease; box-shadow:0 0 40px rgba(0,0,0,.3);}
+    .sidebar.open{transform:translateX(0);}
+    .content{padding:22px 16px 80px;}
+    .topbar{padding:12px 16px;}
+    .menu-toggle{display:flex !important;}
+  }
+  .menu-toggle{display:none; align-items:center; justify-content:center; width:34px; height:34px; border-radius:9px; border:1px solid var(--line); background:#fff; cursor:pointer;}
+
+  @media(prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">Q</div>
+      <div class="brand-text"><b>Caja SISE</b><span>Guía de referencia</span></div>
+    </div>
+    <nav class="tabs" id="tabs">
+      <button class="tab-btn" data-view="inicio"><span class="ico">◆</span> Inicio</button>
+      <button class="tab-btn" data-view="cuentas"><span class="ico">▤</span> Cuentas bancarias</button>
+      <button class="tab-btn" data-view="documentacion"><span class="ico">▥</span> Documentación</button>
+      <button class="tab-btn" data-view="proceso"><span class="ico">➤</span> Proceso Caja SISE</button>
+      <button class="tab-btn" data-view="notas"><span class="ico">✎</span> Notas clave</button>
+      <button class="tab-btn active" data-view="agentes"><span class="ico">🗂</span> Agentes · Periodo de gracia</button>
+      <button class="tab-btn" data-view="accesos"><span class="ico">⌘</span> Accesos y glosario</button>
+    </nav>
+    <div class="tab-note">Usa el buscador de arriba para filtrar por palabra clave en cualquier pestaña: banco, remesa, deducible, referenciado…</div>
+  </aside>
+
+  <main>
+    <div class="topbar">
+      <button class="menu-toggle" id="menuToggle">☰</button>
+      <div class="search-wrap">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#3c2f3e" stroke-width="2.4"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.6" y2="16.6"></line></svg>
+        <input type="text" id="searchInput" placeholder="Buscar: banco, remesa, deducible, CIE, agente…">
+      </div>
+      <div class="search-nav" id="searchNav" style="display:none;">
+        <button id="prevMatch" title="Resultado anterior">▲</button>
+        <button id="nextMatch" title="Siguiente resultado">▼</button>
+      </div>
+      <span class="search-count" id="searchCount" style="display: inline;">0 resultados</span>
+      <div class="topbar-actions">
+        <button class="icon-btn" id="editToggle" title="Activa para poder escribir directo en cualquier tabla">✏️ Editar tablas</button>
+        <button class="icon-btn" id="downloadBtn" title="Descarga una copia del documento con tus cambios">⬇ Guardar copia</button>
+      </div>
+      <span class="page-title" id="pageTitle">Agentes · Periodo de gracia</span>
+    </div>
+
+    <div class="edit-banner" id="editBanner">✏️ Modo edición activo — haz clic en cualquier celda de una tabla para escribir. No olvides "Guardar copia" para no perder tus cambios.</div>
+
+    <div class="content">
+
+      <!-- ================= INICIO ================= -->
+      <section class="view" id="view-inicio">
+        <div class="view-head">
+          <div class="eyebrow">Atención Operativa · Caja SISE</div>
+          <h1>Tu mapa del proceso, de un vistazo</h1>
+          <p>Esta guía junta el manual de capacitación, las cuentas bancarias, los requisitos de documentación y tus propias notas de campo en un solo lugar, organizado para consultarlo rápido en el día a día. Toca cualquier paso del mapa para ir directo al detalle.</p>
+        </div>
+
+        <div class="card">
+          <h3>🗺️ Mapa del proceso de aplicación en Caja</h3>
+          <p>Del recibo del pago a la factura enviada — 11 pasos, en orden.</p>
+          <div class="map-scroll">
+            <div class="map" id="processMap">
+              <!-- generated by JS -->
+            <div class="map-node"><div class="dot">1</div><div class="lbl">Recepción de pago</div><div class="sub">validaciones</div></div><div class="map-line"></div><div class="map-node"><div class="dot">2</div><div class="lbl">Revisión de vigencias</div><div class="sub">12:00 hrs · 60 días</div></div><div class="map-line"></div><div class="map-node"><div class="dot">3</div><div class="lbl">Reglas de aplicación</div><div class="sub">notas de crédito</div></div><div class="map-line"></div><div class="map-node"><div class="dot">4</div><div class="lbl">Generación de remesa</div><div class="sub">8 → 1</div></div><div class="map-line"></div><div class="map-node"><div class="dot">5</div><div class="lbl">Aplicación de remesa</div><div class="sub">8 → 2</div></div><div class="map-line"></div><div class="map-node"><div class="dot">6</div><div class="lbl">Cierre diario</div><div class="sub">8 → 3</div></div><div class="map-line"></div><div class="map-node"><div class="dot">7</div><div class="lbl">Ficha electrónica</div><div class="sub">8 → 4</div></div><div class="map-line"></div><div class="map-node"><div class="dot">8</div><div class="lbl">Deducibles / recuperos</div><div class="sub">QS-10</div></div><div class="map-line"></div><div class="map-node"><div class="dot">9</div><div class="lbl">Consulta de aplicación</div><div class="sub">8 → 8</div></div><div class="map-line"></div><div class="map-node"><div class="dot">10</div><div class="lbl">Código de análisis</div><div class="sub">301</div></div><div class="map-line"></div><div class="map-node"><div class="dot">11</div><div class="lbl">Envío de factura</div><div class="sub">6 → 6 → 6</div></div></div>
+          </div>
+        </div>
+
+        <div class="grid3">
+          <div class="card hide" data-searchable="" data-search="tipos de cobranza tradicional q movil internet centro de contacto cargo automatico tarjeta operadora linea pagos referenciados">
+            <h3>💳 Tipos de cobranza</h3>
+            <p>Formas en que un asegurado puede pagar su póliza:</p>
+            <ul>
+              <li>Tradicional</li>
+              <li>Q Móvil</li>
+              <li>Vía Internet</li>
+              <li>Centro de Contacto Quálitas</li>
+              <li>Pagos Referenciados</li>
+              <li>Operadora en Línea</li>
+              <li>Cargo Automático a Tarjeta de Crédito</li>
+            </ul>
+          </div>
+          <div class="card hide" data-searchable="" data-search="no se recibe efectivo documentos cheque deposito transferencia tarjeta visa mastercard american express">
+            <h3>📄 Documentos que sí recibe Caja</h3>
+            <ul>
+              <li>Cheque</li>
+              <li>Fichas de depósito y/o transferencias</li>
+              <li>Tarjetas de crédito Visa y MasterCard</li>
+              <li>Tarjetas American Express</li>
+            </ul>
+            <div class="callout callout-danger" style="margin-top:10px;">
+              <span class="cico">🚫</span>
+              <div><h4>No se recibe efectivo</h4><p>En ningún tipo de pago dentro de Caja.</p></div>
+            </div>
+          </div>
+          <div class="card hide" data-searchable="" data-search="horario 12 00 vigencia periodo de gracia recibo vencido">
+            <h3>⏰ Horario límite</h3>
+            <p>El ingreso de primas se recibe hasta las <b>12:00 hrs</b> del día de la vigencia estipulada en la póliza.</p>
+            <p style="margin-top:8px;">Después de eso, el recibo se considera vencido y aplica el protocolo de pagos vencidos (ver pestaña <b>Proceso Caja SISE</b>, paso 2).</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= CUENTAS ================= -->
+      <section class="view" id="view-cuentas">
+        <div class="view-head">
+          <div class="eyebrow">Referencia rápida</div>
+          <h1>Cuentas bancarias</h1>
+          <p>Dos juegos de cuentas distintos: las que se usan para <b>depósitos y cheques en Caja</b>, y las <b>cuentas concentradoras</b> (CLABE) que se usan para transferencias y devoluciones. No son intercambiables.</p>
+        </div>
+
+        <div class="card hide" data-searchable="" data-search="entidad validar cheque banco afirme bancomer banorte banregio hsbc inverlat santander us bank otros">
+          <h3>🏦 Cuentas para depósitos en Caja <span class="tag tag-info">Cheques / fichas / transferencias</span></h3>
+          <p>Cada banco tiene asignado un código de <b>Entidad</b> — úsalo para validar el ingreso de un cheque o depósito.</p>
+          <div class="table-scroll">
+          <table>
+            <thead><tr><th>Banco</th><th>Cuenta</th><th>Entidad</th></tr></thead>
+            <tbody>
+              <tr><td contenteditable="false">AFIRME</td><td class="mono" contenteditable="false">101112705</td><td class="mono" contenteditable="false">1131</td></tr>
+              <tr><td contenteditable="false">BANCOMER</td><td class="mono" contenteditable="false">446691730</td><td class="mono" contenteditable="false">1113</td></tr>
+              <tr><td contenteditable="false">BANCOMER (DLS)</td><td class="mono" contenteditable="false">446691722</td><td class="mono" contenteditable="false">1123</td></tr>
+              <tr><td contenteditable="false">BANORTE</td><td class="mono" contenteditable="false">55009821</td><td class="mono" contenteditable="false">1124</td></tr>
+              <tr><td contenteditable="false">BANREGIO</td><td class="mono" contenteditable="false">21-00439-001-3</td><td class="mono" contenteditable="false">1132</td></tr>
+              <tr><td contenteditable="false">HSBC</td><td class="mono" contenteditable="false">4100804195</td><td class="mono" contenteditable="false">1117</td></tr>
+              <tr><td contenteditable="false">INVERLAT</td><td class="mono" contenteditable="false">107148623</td><td class="mono" contenteditable="false">1122</td></tr>
+              <tr><td contenteditable="false">INVERLAT (DLS)</td><td class="mono" contenteditable="false">107186711</td><td class="mono" contenteditable="false">1129</td></tr>
+              <tr><td contenteditable="false">SANTANDER MEXICANO</td><td class="mono" contenteditable="false">65-50004185-8</td><td class="mono" contenteditable="false">1114</td></tr>
+              <tr><td contenteditable="false">SANTANDER (DLS)</td><td class="mono" contenteditable="false">82500004565</td><td class="mono" contenteditable="false">1116</td></tr>
+              <tr><td contenteditable="false">US BANK</td><td class="mono" contenteditable="false">—</td><td class="mono" contenteditable="false">1128</td></tr>
+              <tr><td contenteditable="false">OTROS</td><td class="mono" contenteditable="false">—</td><td class="mono" contenteditable="false">1114</td></tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+
+        <div class="card hide" data-searchable="" data-search="cuentas concentradoras clabe sucursal transferencias devoluciones bbva bancomer hsbc scotiabank santander banorte banregio">
+          <h3>🏛️ Cuentas concentradoras <span class="tag tag-req">CLABE — devoluciones / transferencias</span></h3>
+          <p>Usa estas cuentas (con CLABE completa) cuando el pago se realice <b>fuera de los referenciados</b> — por ejemplo, un recibo ya vencido, o para procesar una devolución.</p>
+          <div class="table-scroll">
+          <table>
+            <thead><tr><th>Banco</th><th>Cuenta</th><th>Sucursal</th><th>CLABE</th></tr></thead>
+            <tbody>
+              <tr><td contenteditable="false">BBVA BANCOMER</td><td class="mono" contenteditable="false">446691730</td><td class="mono" contenteditable="false">18</td><td class="mono" contenteditable="false">012180004466917308</td></tr>
+              <tr><td contenteditable="false">HSBC</td><td class="mono" contenteditable="false">4100804195</td><td class="mono" contenteditable="false">3024</td><td class="mono" contenteditable="false">021180041008041958</td></tr>
+              <tr><td contenteditable="false">SCOTIABANK</td><td class="mono" contenteditable="false">107148623</td><td class="mono" contenteditable="false">79</td><td class="mono" contenteditable="false">044180001071486237</td></tr>
+              <tr><td contenteditable="false">SANTANDER</td><td class="mono" contenteditable="false">65500041858</td><td class="mono" contenteditable="false">9</td><td class="mono" contenteditable="false">014180655000418584</td></tr>
+              <tr><td contenteditable="false">BANORTE</td><td class="mono" contenteditable="false">55009821</td><td class="mono" contenteditable="false">9</td><td class="mono" contenteditable="false">072180000550098216</td></tr>
+              <tr><td contenteditable="false">BANREGIO</td><td class="mono" contenteditable="false">21004390013</td><td class="mono" contenteditable="false">9</td><td class="mono" contenteditable="false">058580210043900131</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <div class="callout callout-info" style="margin-top:12px;">
+            <span class="cico">💡</span>
+            <div><h4>Recuerda</h4><p>Estos pagos a cuenta concentradora <b>no se aplican automáticamente</b>. Necesitas el comprobante para enviarlo a confirmación al área de Tesorería.</p></div>
+          </div>
+        </div>
+
+        <div class="card hide" data-searchable="" data-search="pagos referenciados ejemplos cie guia convenio abono cobranza con recibo servicio rap cep bbva santander banamex scotiabank hsbc banorte no se deben aplicar por cajeros san jeronimo">
+          <h3>🔖 Pagos referenciados — cómo identificarlos</h3>
+          <p>Cada banco nombra distinto a su servicio de pago referenciado en el comprobante:</p>
+          <div class="table-scroll">
+          <table>
+            <thead><tr><th>Banco</th><th>Se identifica como</th></tr></thead>
+            <tbody>
+              <tr><td contenteditable="false">BBVA Bancomer</td><td contenteditable="false">CIE 1267639 · Guía CIE</td></tr>
+              <tr><td contenteditable="false">Santander Mexicano</td><td contenteditable="false">Cuenta 65500207650</td></tr>
+              <tr><td contenteditable="false">Banco Nacional de México (Banamex)</td><td contenteditable="false">Abono</td></tr>
+              <tr><td contenteditable="false">Scotiabank Inverlat</td><td contenteditable="false">Cobranza con recibo · Servicio 2111</td></tr>
+              <tr><td contenteditable="false">HSBC</td><td contenteditable="false">RAP 1296</td></tr>
+              <tr><td contenteditable="false">Banorte</td><td contenteditable="false">CEP 52953</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <div class="callout callout-warn" style="margin-top:12px;">
+            <span class="cico">⚠️</span>
+            <div><h4>Regla de oro para el cajero</h4><p>Estos comprobantes son <b>informativos</b> para la oficina — <b>no se aplican manualmente</b>. El pago se refleja solo en SISE, de forma automática, al siguiente día hábil, aplicado por personal de Caja de la oficina San Jerónimo.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= DOCUMENTACION ================= -->
+      <section class="view" id="view-documentacion">
+        <div class="view-head">
+          <div class="eyebrow">Art. 492</div>
+          <h1>Documentación y devoluciones</h1>
+          <p>Requisitos que debe cumplir cualquier documento antes de tramitarse — sea para una devolución, un cotejo o una excepción de vigencia.</p>
+        </div>
+
+        <div class="grid2">
+          <div class="card hide" data-searchable="" data-search="comprobante domicilio vigente estado cuenta bancario energia electrica telefonia gas natural agua predial 3 meses">
+            <h3>🏠 Comprobante de domicilio <span class="tag tag-info">No mayor a 3 meses</span></h3>
+            <ul>
+              <li>Estado de cuenta bancario</li>
+              <li>Recibo de energía eléctrica</li>
+              <li>Telefonía residencial o celular (sujeto a plan de pago)</li>
+              <li>Gas natural</li>
+              <li>Derechos por servicio de suministro de agua</li>
+              <li>Impuesto predial</li>
+            </ul>
+          </div>
+          <div class="card hide" data-searchable="" data-search="identificacion oficial ine credencial votar pasaporte cedula profesional matricula consular tarjeta identidad militar inapam licencia conducir">
+            <h3>🪪 Identificación oficial</h3>
+            <ul>
+              <li>Credencial para votar (INE)</li>
+              <li>Pasaporte</li>
+              <li>Cédula profesional</li>
+              <li>Certificado de matrícula consular</li>
+              <li>Tarjeta única de identidad militar</li>
+              <li>Tarjeta de afiliación al INAPAM</li>
+              <li>Licencia de conducir</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card hide" data-searchable="" data-search="cotejo texto se hace constar que la presente copia coincide con el original que se tuvo a la vista nombre fecha firma">
+          <h3>✅ Texto obligatorio de cotejo</h3>
+          <p>Toda copia debe traer, escrito a mano o sellado, exactamente este texto — junto con nombre completo, fecha y firma de quien cotejó:</p>
+          <div class="callout callout-ok">
+            <span class="cico">"</span>
+            <div><p style="font-style:italic;">“Se hace constar que la presente copia coincide con el original que se tuvo a la vista”</p><p style="margin-top:6px; font-size:12px;">[Nombre completo, fecha y firma de la persona que cotejó]</p></div>
+          </div>
+          <p style="margin-top:6px;">Toda la documentación debe entregarse cotejada, legible y en hojas blancas.</p>
+        </div>
+
+        <div class="card hide" data-searchable="" data-search="formato de devolucion tipo de movimiento cheque transferencia pago en ventanilla poliza monto oficina de envio fecha de cancelacion motivo punto de venta comentarios">
+          <h3>📝 Formato de solicitud de devolución</h3>
+          <p>Campos que debes completar en toda solicitud:</p>
+          <div class="table-scroll">
+          <table>
+            <thead><tr><th>Campo</th><th>Qué va aquí</th></tr></thead>
+            <tbody>
+              <tr><td contenteditable="false">Tipo de movimiento</td><td contenteditable="false">Cheque / Transferencia / Pago en ventanilla</td></tr>
+              <tr><td contenteditable="false">No. de póliza a devolver</td><td contenteditable="false">De 7 a 10 dígitos</td></tr>
+              <tr><td contenteditable="false">A favor de</td><td contenteditable="false">Nombre a quien se expedirá el cheque o transferencia</td></tr>
+              <tr><td contenteditable="false">Monto</td><td contenteditable="false">Importe a devolver</td></tr>
+              <tr><td contenteditable="false">Oficina de envío</td><td contenteditable="false">Si es cheque: oficina donde se debe enviar el original</td></tr>
+              <tr><td contenteditable="false">Fecha de cancelación</td><td contenteditable="false">Día a partir del cual se realiza la devolución</td></tr>
+              <tr><td contenteditable="false">Motivo de cancelación</td><td contenteditable="false">Venta de unidad, a solicitud, PT, sustitución, etc.</td></tr>
+              <tr><td contenteditable="false">Punto de venta</td><td contenteditable="false">Nombre del portal</td></tr>
+              <tr><td contenteditable="false">Comentarios u observaciones</td><td contenteditable="false">Libre</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <p style="margin-top:10px; font-weight:600; color:var(--purple-700);">Checklist Art. 492 antes de tramitar:</p>
+          <ul>
+            <li>☐ Comprobante de domicilio vigente (menor a 3 meses)</li>
+            <li>☐ IFE / INE vigente</li>
+            <li>☐ Documentación cotejada y legible</li>
+            <li>☐ Si la dirección del comprobante no coincide con la de la credencial, especificar el motivo (renta, familiar, etc.)</li>
+          </ul>
+        </div>
+
+        <div class="card hide" data-searchable="" data-search="autorizacion retroactividad cuentas corporativas ao ejecutivo coordinador gerente subdirector director dias meses ano fecha diferente opl">
+          <h3>🔐 Autorización de retroactividad <span class="tag tag-amber">Cuentas corporativas o AO</span></h3>
+          <p>Aplica cuando se pide devolver con una fecha diferente a la registrada en OPL. El nivel de autorización depende de qué tan atrás se quiera la fecha:</p>
+          <div class="table-scroll">
+          <table>
+            <thead><tr><th>Autoriza</th><th>Rango de retroactividad</th></tr></thead>
+            <tbody>
+              <tr><td contenteditable="false">Ejecutivo</td><td contenteditable="false">Hasta 30 días</td></tr>
+              <tr><td contenteditable="false">Coordinador</td><td contenteditable="false">1 a 3 meses</td></tr>
+              <tr><td contenteditable="false">Gerente</td><td contenteditable="false">3 a 6 meses</td></tr>
+              <tr><td contenteditable="false">Subdirector</td><td contenteditable="false">6 meses a 1 año</td></tr>
+              <tr><td contenteditable="false">Director</td><td contenteditable="false">Mayor a 1 año</td></tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= PROCESO ================= -->
+      <section class="view" id="view-proceso">
+        <div class="view-head">
+          <div class="eyebrow">Manual de Caja SISE</div>
+          <h1>El proceso, paso a paso</h1>
+          <p>Toca cada paso para expandirlo. Cada uno trae la ruta de menú exacta que necesitas teclear en SISE.</p>
+        </div>
+
+        <div class="stepper" id="stepper">
+          <!-- Steps injected by JS from data below, but we author markup directly for reliability -->
+
+          <div class="step hide" data-searchable="" data-search="recepcion de pago aviso de cobro validacion asegurado vigencia agente siniestro importe">
+            <div class="step-head"><div class="step-num">1</div><h3>Recepción de pago</h3><span class="step-chevron">▾</span></div>
+            <div class="step-body"><div class="step-body-inner">
+              <p>El área de Caja solicita el aviso de cobro de la póliza y revisa en SISE el estatus antes de aplicar. Se valida:</p>
+              <ul>
+                <li>Datos del asegurado</li>
+                <li>Vigencia</li>
+                <li>Agente</li>
+                <li>Siniestro (si tiene)</li>
+                <li>Importe</li>
+              </ul>
+            </div></div>
+          </div>
+
+          <div class="step hide" data-searchable="" data-search="revision de vigencias 12 00 hrs periodo de gracia recibo vencido 60 dias carta no siniestro ine voto bueno comercial gerencia atencion a oficinas director de cuenta rehabilitacion">
+            <div class="step-head"><div class="step-num">2</div><h3>Revisión de vigencias</h3><span class="step-chevron">▾</span></div>
+            <div class="step-body"><div class="step-body-inner">
+              <p>El ingreso de primas se recibe hasta las <b>12:00 hrs</b> del día de la vigencia estipulada en la póliza.</p>
+              <div class="callout callout-warn"><span class="cico">📌</span><div><h4>Vencidos hasta 60 días</h4><p>Requieren carta de <b>“No Siniestro”</b> a la fecha, firmada por el asegurado, más INE por ambos lados, y Vo.Bo. del área comercial.</p></div></div>
+              <ul style="margin-top:10px;">
+                <li>Vencidos a más de 60 días (oficinas del interior o área metropolitana): autoriza la <b>Gerencia de Atención a Oficinas</b>.</li>
+                <li>Vencidos a más de 60 días (oficinas propias): autoriza el <b>Director de la Cuenta</b>.</li>
+                <li>La rehabilitación en SISE se hace solo hasta contar con el pago, verificando cancelación y siniestros.</li>
+                <li>Sin carta de "No Siniestro" ni identificación: si hay siniestro, el costo lo cubre la Oficina.</li>
+              </ul>
+            </div></div>
+          </div>
+
+          <div class="step hide" data-searchable="" data-search="aplicacion notas de credito mismo asegurado poliza pagada primas en deposito estado de cuenta agente cheque personal tarjeta agente mismo dia">
+            <div class="step-head"><div class="step-num">3</div><h3>Aplicación (reglas de notas de crédito)</h3><span class="step-chevron">▾</span></div>
+            <div class="step-body"><div class="step-body-inner">
+              <ul>
+                <li>Deben ser a nombre del mismo asegurado.</li>
+                <li>La póliza que genera la nota de crédito debe estar pagada.</li>
+                <li>Fuera de política manejar primas en depósito.</li>
+                <li>Prohibido abonar o cargar al estado de cuenta del agente por pago de prima.</li>
+                <li>Prohibido aceptar pagos con cheques personales o tarjeta de crédito del agente.</li>
+                <li>Todos los pagos se aplican el mismo día de su recepción.</li>
+              </ul>
+            </div></div>
+          </div>
+
+          <div class="step hide" data-searchable="" data-search="generacion de remesa imputacion de caja ingresos menu 8 caja 1 agente cia seg otros cobrador oficina clave agente liquidacion de primas documentos cheque ficha deposito transferencia tarjeta forma de pago importe 3 campos caratula reimpresion">
+            <div class="step-head"><div class="step-num">4</div><h3>Generación de remesa</h3><span class="step-chevron">▾</span></div>
+            <div class="step-body"><div class="step-body-inner">
+              <div class="step-route"><span class="chip">8 · Caja <span class="arrow">→</span> 1 · Imputación de Caja Ingresos</span></div>
+              <p>Elige <b>AGENTE (P)</b> para la aplicación. Captura oficina, clave de agente y en descripción escribe: <b>LIQUIDACIÓN DE PRIMAS</b>.</p>
+              <p>Documentos aceptados: cheque, fichas de depósito/transferencia, tarjeta Visa/MasterCard, American Express. En depósitos y transferencias hay que indicar la forma de pago del comprobante para que la factura selle bien.</p>
+              <div class="callout callout-danger"><span class="cico">🚫</span><div><h4>No se recibe efectivo</h4><p>En ningún tipo de pago.</p></div></div>
+              <p style="margin-top:10px;">El importe capturado debe ser <b>idéntico en los 3 campos</b> (importe a ingresar, total, y detalle) — si no coincide, SISE no deja generar la remesa. Al cuadrar, el sistema entrega el <b>número de carátula/remesa</b>.</p>
+              <p>Reimpresión de carátulas: ingresa el número de remesa → <span class="chip chip-teal">N = No modifica</span> → indica impresora y copias (1).</p>
+            </div></div>
+          </div>
+
+          <div class="step hide" data-searchable="" data-search="aplicacion de remesa menu 8 caja 2 numero de recibo control forma de pago facturacion efectivo cheque transferencia credito compensacion debito diferencia faltantes sobrantes cuenta contable factura">
+            <div class="step-head"><div class="step-num">5</div><h3>Aplicación de la remesa</h3><span class="step-chevron">▾</span></div>
+            <div class="step-body"><div class="step-body-inner">
+              <div class="step-route"><span class="chip">8 · Caja <span class="arrow">→</span> 2 · Aplicación de Remesas</span></div>
+              <p>Ingresa el número de remesa y confirma con <b>S</b> en "¿Desea imputar recibo?". Después ingresa el número de control (recibo) — SISE desglosa importe, asegurado y póliza.</p>
+              <p>Para facturar, indica la forma de pago: <b>1 Efectivo · 2 Cheque · 3 Transferencia · 4 Crédito · 17 Compensación · 28 Débito.</b></p>
+              <div class="callout callout-warn"><span class="cico">📌</span><div><h4>Ojo con sucursal bancaria</h4><p>Si el pago se hizo en sucursal como "cheque" o "efectivo", el cajero debe capturar ese método aunque en SISE aparezca como "depósito".</p></div></div>
+              <p style="margin-top:10px;">La diferencia debe quedar en <b>$0.00</b>. Solo se tolera de <b>-$10.00 a +$10.00</b>, y debe registrarse en las cuentas contables:</p>
+              <ul>
+                <li><span class="mono">5713020910000 (D)</span> — Faltantes</li>
+                <li><span class="mono">6506000910000 (C)</span> — Sobrantes</li>
+              </ul>
+              <p>Al finalizar, confirma "Generar facturación de recibos aplicados: S/N" — SISE genera el recibo facturado por cada aplicación.</p>
+            </div></div>
+          </div>
+
+          <div class="step hide" data-searchable="" data-search="cierre diario de caja menu 8 caja 3 fecha oficina spooler impresion verificar documentos fisicos">
+            <div class="step-head"><div class="step-num">6</div><h3>Cierre diario de Caja</h3><span class="step-chevron">▾</span></div>
+            <div class="step-body"><div class="step-body-inner">
+              <div class="step-route"><span class="chip">8 · Caja <span class="arrow">→</span> 3 · Cierre Diario de Caja Ingresos</span></div>
+              <p>Ingresa fecha desde/hasta y la oficina. Al terminar se genera un <b>spooler</b> que debes enviar a impresión para fines administrativos.</p>
+              <p>Por último, cotéjalo contra lo que existe físicamente en documentos (cheques, fichas, comprobantes).</p>
+            </div></div>
+          </div>
+
+          <div class="step hide" data-searchable="" data-search="ficha electronica deposito bancario menu 8 caja 4 banco fecha cheque efectivo depositado firme rechazado ventanilla referencia moneda pesos dolares total caja general maria del carmen romero arturo santiago">
+            <div class="step-head"><div class="step-num">7</div><h3>Ficha electrónica (depósitos bancarios)</h3><span class="step-chevron">▾</span></div>
+            <div class="step-body"><div class="step-body-inner">
+              <div class="step-route"><span class="chip">8 · Caja <span class="arrow">→</span> 4 · Depósitos Bancarios (ficha electrónica)</span></div>
+              <p>Solo aplica si hubo ingresos en <b>cheque o efectivo</b>. Describe cada depósito y cuadra contra el <b>Total de Cta. Caja General</b> del cierre diario. Captura, por línea:</p>
+              <ul>
+                <li><b>Banco:</b> clave del banco donde se depositó.</li>
+                <li><b>Fecha:</b> la que trae la ficha de depósito impresa.</li>
+                <li><b>C / E:</b> Cheque o Efectivo — para un cheque Quálitas, captura "C" y en referencia la letra "Q" + número de cheque; el cheque original debe estar rayado "cancelado" y anexado al corte.</li>
+                <li><b>D / R:</b> Depositado en firme, o Rechazado/devuelto en ventanilla (clave 9999 + número de remesa en referencia).</li>
+                <li><b>Referencia:</b> la que trae impresa la ficha de depósito.</li>
+                <li><b>Moneda:</b> 00 pesos, 01 dólares.</li>
+                <li><b>Importe.</b></li>
+              </ul>
+              <div class="callout callout-danger"><span class="cico">✉️</span><div><h4>Si un cheque fue devuelto en ventanilla</h4><p>Envía correo a <b>María Del Carmen Romero / Arturo Santiago</b>, con copia al Ejecutivo de Cobranza San Jerónimo de tu oficina, solicitando la cancelación de la póliza. Si luego reponen el pago, pide la rehabilitación y la nueva ficha de depósito.</p></div></div>
+            </div></div>
+          </div>
+
+          <div class="step hide" data-searchable="" data-search="deducibles recuperos demeritos formato qs 10 siniestros comercial asegurados no efectivo no cheques fecha del siniestro consulta de siniestros estimaciones historicas autorizacion automatica ingreso duplicar complemento">
+            <div class="step-head"><div class="step-num">8</div><h3>Deducibles, recuperos y deméritos</h3><span class="step-chevron">▾</span></div>
+            <div class="step-body"><div class="step-body-inner">
+              <p>Siniestros, Comercial o el Asegurado solicitan el ingreso con el <b>formato QS-10</b>. Caja valida denominación de la empresa, número de cuenta, sello del banco y fecha del depósito en la ficha.</p>
+              <ul>
+                <li>Por seguridad, <b>no se reciben pagos en efectivo.</b></li>
+                <li><b>No se aceptan cheques.</b></li>
+                <li>El depósito debe ser acorde a la fecha del siniestro.</li>
+              </ul>
+              <p style="margin-top:8px;"><b>Consultar el siniestro antes de aplicar:</b></p>
+              <div class="step-route"><span class="chip">2 · Consulta de Siniestros <span class="arrow">→</span> 5 · Consulta de Siniestros <span class="arrow">→</span> 4 · Consulta de Estimaciones Históricas</span></div>
+              <p>Ingresa el número de siniestro: oficina + ramo 04 + año + número. Verás estimaciones, póliza, inciso y pagos ya realizados.</p>
+              <p style="margin-top:8px;"><b>Autorizar el ingreso:</b></p>
+              <div class="step-route"><span class="chip">8 · Caja <span class="arrow">→</span> 10 · Autorización Automática de Ingreso de Deducibles <span class="arrow">→</span> 1 · Alta de Autorizaciones Automáticas</span></div>
+              <div class="callout callout-info"><span class="cico">🔁</span><div><h4>SISE no deja duplicar</h4><p>Existe una validación que bloquea un segundo ingreso de deducible/recuperación sobre el mismo siniestro y cobertura. Si es un <b>complemento</b> real, pide un número de autorización especial a tu Ejecutivo de Atención Operativa.</p></div></div>
+            </div></div>
+          </div>
+
+          <div class="step hide" data-searchable="" data-search="consulta de aplicacion caratulas menu 8 caja 8 fecha aplicacion ingreso agente oficina cuenta contable banco folio bancario referencia moneda importe tipo de cambio usuario consulta de asientos sobrante codigo de afectacion generar cheque error de facturacion recibo de pago datos fiscales serie folio rfc mensaje error">
+            <div class="step-head"><div class="step-num">9</div><h3>Consultar una aplicación / diagnosticar errores</h3><span class="step-chevron">▾</span></div>
+            <div class="step-body"><div class="step-body-inner">
+              <p><b>Ver el detalle de una carátula ya aplicada:</b></p>
+              <div class="step-route"><span class="chip">8 · Caja <span class="arrow">→</span> 8 · Consulta de Carátulas</span></div>
+              <p>Muestra fecha de aplicación e ingreso, agente, oficina, cuenta contable/banco, folio y referencia bancaria, moneda, importe, tipo de cambio y usuario que aplicó. La pantalla de "Consulta de Asientos" te deja ver si hay sobrante y el código de afectación, útil para generar un cheque.</p>
+              <p style="margin-top:10px;"><b>Diagnosticar un error de facturación:</b></p>
+              <div class="step-route"><span class="chip">1 · Consulta de Operaciones <span class="arrow">→</span> 4 · Consulta de Recibos de Pago</span></div>
+              <p>Ingresa el número de recibo o control. En la parte superior, teclea <b>D = Datos Fiscales</b> para ver serie y folio, RFC, folio fiscal y el <b>mensaje de error</b> si la factura no se generó.</p>
+            </div></div>
+          </div>
+
+          <div class="step hide" data-searchable="" data-search="codigo de analisis sistema de analisis menu 8 caja 9 301 detalle moneda 01 dolares 00 pesos numero de poliza fecha saldo sobrante remesa">
+            <div class="step-head"><div class="step-num">10</div><h3>Código de análisis (sobrantes)</h3><span class="step-chevron">▾</span></div>
+            <div class="step-body"><div class="step-body-inner">
+              <div class="step-route"><span class="chip">8 · Caja <span class="arrow">→</span> 9 · Sistema de Análisis <span class="arrow">→</span> 1 · Consulta del Análisis - Detalle</span></div>
+              <p><b>Siempre se ingresa con código 301.</b> Moneda: 01 dólares, 00 pesos. El "Nro. Análisis" es el número de póliza; verás fecha y saldo del sobrante generado por una remesa.</p>
+            </div></div>
+          </div>
+
+          <div class="step hide" data-searchable="" data-search="envio de factura menu 6 impresion reimpresion de comprobantes envio documentos cfdi polizas via email facturacion qualitas com mx xml pdf zip">
+            <div class="step-head"><div class="step-num">11</div><h3>Envío de factura por correo</h3><span class="step-chevron">▾</span></div>
+            <div class="step-body"><div class="step-body-inner">
+              <div class="step-route"><span class="chip">6 · Menú de Impresión <span class="arrow">→</span> 6 · Reimpresión de Comprobantes <span class="arrow">→</span> 6 · Envío de Documentos CFDI Pólizas vía Email</span></div>
+              <p>El sistema genera y envía un <b>ZIP con PDF y XML</b> de la(s) factura(s) solicitada(s) de la póliza/endoso indicados.</p>
+              <div class="callout callout-ok"><span class="cico">✉️</span><div><h4>Correo de facturación</h4><p class="mono">facturacion@qualitas.com.mx</p></div></div>
+            </div></div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ================= NOTAS ================= -->
+      <section class="view" id="view-notas">
+        <div class="view-head">
+          <div class="eyebrow">Tus apuntes de campo</div>
+          <h1>Notas clave del día a día</h1>
+          <p>Lo que no siempre está tan explícito en el manual, pero que usas constantemente en la operación diaria.</p>
+        </div>
+
+        <div class="card hide" data-searchable="" data-search="pagos referenciados aviso recibo de cobro banco transferencia no vencido periodo de gracia cuenta conservadora concentradora tesoreria comprobante confirmar recibo vencido carta de no siniestro ine consultar poliza antes de aplicar fecha carta">
+          <h3>1 · Pagos referenciados y pagos vencidos <span class="tag tag-ok">Se aplican solos</span></h3>
+          <p>Se pagan con el aviso/recibo de cobro que se entrega con la póliza, directamente en banco o por transferencia.</p>
+          <p>Es <b>"referenciado"</b> cuando el recibo <b>no está vencido</b>: vence en la fecha indicada, a más tardar a las <b>12:00 hrs</b>, dentro del periodo de gracia de la póliza.</p>
+          <div class="callout callout-warn">
+            <span class="cico">⚠️</span>
+            <div><h4>Si ya venció</h4><p>La opción es pagar en la <b>cuenta concentradora</b> de la compañía. Estos pagos <b>no se aplican automático</b> — necesitas el comprobante para enviarlo a confirmar al área de <b>Tesorería</b>.</p></div>
+          </div>
+          <p style="margin-top:12px;">Y justo por eso, <b>todo pago que llega vencido</b> pide además carta de <b>"No Siniestro"</b> más INE — el asegurado puede escribir directamente en la carta que no tiene siniestro.</p>
+          <div class="callout callout-info">
+            <span class="cico">🔎</span>
+            <div><h4>Antes de aplicar, siempre</h4><p>Consulta la póliza para validar fecha y confirmar que la carta de "No Siniestro" sea consistente.</p></div>
+          </div>
+        </div>
+
+        <div class="card hide" data-searchable="" data-search="pago con tarjeta link de pago recibos vencidos vigentes">
+          <h3>2 · Pago con tarjeta</h3>
+          <p>Se genera mediante un <b>link de pago</b>. Con este medio se pueden pagar tanto recibos vencidos como recibos dentro de su periodo de pago.</p>
+        </div>
+
+        <div class="card hide" data-searchable="" data-search="polizas referenciadas iguales solo cambian referencias datos del cliente pagan despues del vencimiento deposito cuenta concentradora">
+          <h3>3 · Pólizas referenciadas</h3>
+          <p>Las fichas vienen prácticamente iguales entre sí: solo cambian la <b>referencia</b> y los <b>datos del cliente</b>.</p>
+          <p>Se pagan con el recibo <b>antes</b> de su vencimiento. Si el pago se hace <b>después</b> del vencimiento, se realiza mediante depósito en la <b>cuenta concentradora</b>.</p>
+        </div>
+
+        <div class="callout callout-danger">
+          <span class="cico">🧭</span>
+          <div>
+            <h4>Regla mental rápida para decidir dónde va un pago</h4>
+            <p>¿El recibo está vigente (antes de vencer, antes de las 12:00 hrs)? → <b>Referenciado</b>, se aplica solo.<br>
+            ¿Ya venció? → <b>Cuenta concentradora</b> + carta de "No Siniestro" + INE + comprobante a Tesorería.<br>
+            ¿Quiere pagar con tarjeta? → <b>Link de pago</b>, sirve para vencidos o vigentes.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= AGENTES ================= -->
+      <section class="view active" id="view-agentes">
+        <div class="view-head">
+          <div class="eyebrow">Excepciones registradas</div>
+          <h1>Agentes con período de gracia especial</h1>
+          <p>Algunos agentes/pólizas tienen un período de gracia distinto al estándar, prórrogas negociadas o notas de vencimiento particulares. Consúltalo aquí antes de rechazar un pago por estar "vencido".</p>
+        </div>
+
+        <div class="card">
+          <h3>📋 Listado completo</h3>
+          <div class="callout callout-info" style="margin-bottom:14px;">
+            <span class="cico">💡</span>
+            <div><h4>Cómo leer la tabla</h4><p>"Aplica en" indica si el período de gracia especial cubre <b>todos los recibos</b> de la póliza o <b>solo el primero</b>. Usa el buscador de arriba para encontrar un agente por número, nombre o ejecutivo.</p></div>
+          </div>
+          <div class="table-scroll">
+          <table>
+            <thead><tr><th>Agente / Póliza</th><th>Período de gracia</th><th>Fecha de notificación</th><th>Ejecutivo</th><th>Asegurado</th><th>Nota adicional</th><th>Aplica en</th></tr></thead>
+            <tbody>
+              <tr><td class="mono" contenteditable="false">12292</td><td contenteditable="false">90 días</td><td contenteditable="false">—</td><td contenteditable="false">Belén</td><td contenteditable="false">Corsa Reynosa</td><td contenteditable="false">Prórroga de 90 días</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">20803</td><td contenteditable="false">14 días</td><td contenteditable="false">—</td><td contenteditable="false">Belén</td><td contenteditable="false">Jaime Jacques Cartera General</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">33849</td><td contenteditable="false">90 días</td><td contenteditable="false">Vto. 13 de cada mes</td><td contenteditable="false">Belén</td><td contenteditable="false">UDEM DOM</td><td contenteditable="false">Prórroga de 90 días</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">33873</td><td contenteditable="false">90 días</td><td contenteditable="false">Vto. 13 de cada mes</td><td contenteditable="false">Belén</td><td contenteditable="false">UDEM DXN</td><td contenteditable="false">Prórroga de 90 días</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">34290</td><td contenteditable="false">60 días</td><td contenteditable="false">Vto. 01 de cada mes</td><td contenteditable="false">Belén</td><td contenteditable="false">ENERSYS</td><td contenteditable="false">Prórroga de 60 días</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">35043</td><td contenteditable="false">30 días</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">Mercado de Abastos</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">43457</td><td contenteditable="false">14 días</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">Raspberry venta en línea</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">51610</td><td contenteditable="false">14 días</td><td contenteditable="false">—</td><td contenteditable="false">Belén</td><td contenteditable="false">Reigers Cartera General</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">52564</td><td contenteditable="false">30 días</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">Ya no está</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">52731</td><td contenteditable="false">14 días</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">Ernesto Santos Individual</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">52797</td><td contenteditable="false">50 días</td><td contenteditable="false">Vto. 25 de cada mes</td><td contenteditable="false">Belén</td><td contenteditable="false">Novocast</td><td contenteditable="false">Prórroga de 50 días</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">52989</td><td contenteditable="false">30 días</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">Ernesto Santos PEMEX</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">52990</td><td contenteditable="false">30 días</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">Ernesto Santos PEMEX Corporativo</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">54564</td><td contenteditable="false">30 días</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">Secretaría de Salud de Nuevo León</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">70474</td><td contenteditable="false">14 días</td><td contenteditable="false">—</td><td contenteditable="false">Ericka</td><td contenteditable="false">Interprotección Cartera Normal</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">71415</td><td contenteditable="false">14 días</td><td contenteditable="false">—</td><td contenteditable="false">Belén</td><td contenteditable="false">Caja Buenos Aires Socios</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">71791</td><td contenteditable="false">14 días</td><td contenteditable="false">—</td><td contenteditable="false">Belén</td><td contenteditable="false">Gustavo Cabrera Cartera General</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">74259</td><td contenteditable="false">14 días</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">Priority Cartera Normal</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">75206</td><td contenteditable="false">90 días</td><td contenteditable="false">Vto. 13 de cada mes</td><td contenteditable="false">—</td><td contenteditable="false">UDEM REF</td><td contenteditable="false">Prórroga de 90 días</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">79750</td><td contenteditable="false">30 días</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">Odessa Caja de Ahorro (sustituirá la 58603)</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">79751</td><td contenteditable="false">30 días</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">Odessa Caja de Ahorro (sustituirá la 58576)</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">83200</td><td contenteditable="false">30 días</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">Municipio</td><td contenteditable="false">Vigencia pasada no debe tener prima pendiente</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">83777</td><td contenteditable="false">14 días</td><td contenteditable="false">—</td><td contenteditable="false">Belén</td><td contenteditable="false">Clever Cartera General</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">85487</td><td contenteditable="false">30 días</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">Caja de Ahorro</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">86622</td><td contenteditable="false">14 días</td><td contenteditable="false">—</td><td contenteditable="false">Belén</td><td contenteditable="false">Gustavo Cabrera Ocampo Cartera General</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">87290</td><td contenteditable="false">30 días</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">Grupo Xignux Alta Gama</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">87571</td><td contenteditable="false">30 días</td><td contenteditable="false">—</td><td contenteditable="false">Manuel</td><td contenteditable="false">Sekura Individuales</td><td contenteditable="false">—</td><td contenteditable="false">Solo primer recibo</td></tr>
+              <tr><td class="mono" contenteditable="false">87858</td><td contenteditable="false">14 días</td><td contenteditable="false">—</td><td contenteditable="false">Belén</td><td contenteditable="false">Yturria MBS</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">88011</td><td contenteditable="false">30 días</td><td contenteditable="false">45????</td><td contenteditable="false">Camargo Supply &amp; Services</td><td contenteditable="false">COLAB</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">88052</td><td contenteditable="false">30 días</td><td contenteditable="false">—</td><td contenteditable="false">Ericka</td><td contenteditable="false">PYME Sekura</td><td contenteditable="false">—</td><td contenteditable="false">Solo primer recibo</td></tr>
+              <tr><td class="mono" contenteditable="false">88053</td><td contenteditable="false">60 días</td><td contenteditable="false">—</td><td contenteditable="false">Manuel</td><td contenteditable="false">LEGO</td><td contenteditable="false">—</td><td contenteditable="false">Solo primer recibo</td></tr>
+              <tr><td class="mono" contenteditable="false">88055</td><td contenteditable="false">90 días</td><td contenteditable="false">—</td><td contenteditable="false">Edith</td><td contenteditable="false">Xignux Oficiales (espejo de la clave 88055)</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">88056</td><td contenteditable="false">90 días</td><td contenteditable="false">—</td><td contenteditable="false">Edith</td><td contenteditable="false">Xignux Empleados (espejo de la clave 88056)</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">88057</td><td contenteditable="false">90 días</td><td contenteditable="false">—</td><td contenteditable="false">Edith</td><td contenteditable="false">Xignux Contado (espejo de la clave 88057)</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">88058</td><td contenteditable="false">90 días</td><td contenteditable="false">—</td><td contenteditable="false">Ericka</td><td contenteditable="false">Gonher Mex SA de CV (oficiales) — espejo de la clave 77329</td><td contenteditable="false">—</td><td contenteditable="false">En todos los recibos</td></tr>
+              <tr><td class="mono" contenteditable="false">88059</td><td contenteditable="false">90 días</td><td contenteditable="false">—</td><td contenteditable="false">Ericka</td><td contenteditable="false">Gonher Mex SA de CV (empleados referenciado)</td><td contenteditable="false">—</td><td contenteditable="false">En todos los recibos</td></tr>
+              <tr><td class="mono" contenteditable="false">88060</td><td contenteditable="false">90 días</td><td contenteditable="false">—</td><td contenteditable="false">Ericka</td><td contenteditable="false">Gonher Mex SA de CV (empleados domiciliados) — espejo de la clave 77331</td><td contenteditable="false">—</td><td contenteditable="false">En todos los recibos</td></tr>
+              <tr><td class="mono" contenteditable="false">88066</td><td contenteditable="false">90 días</td><td contenteditable="false">—</td><td contenteditable="false">Ericka</td><td contenteditable="false">Proeza SA de CV Empleados — espejo de la clave 87115</td><td contenteditable="false">—</td><td contenteditable="false">En todos los recibos</td></tr>
+              <tr><td class="mono" contenteditable="false">88067</td><td contenteditable="false">90 días</td><td contenteditable="false">—</td><td contenteditable="false">Ericka</td><td contenteditable="false">Proeza SA de CV Oficiales — espejo de la clave 87116</td><td contenteditable="false">—</td><td contenteditable="false">En todos los recibos</td></tr>
+              <tr><td class="mono" contenteditable="false">88068</td><td contenteditable="false">90 días</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">Grupo Xignux — espejo de la clave 87290</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">88775</td><td contenteditable="false">120 días</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">III Servicios</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">88927</td><td contenteditable="false">45 días</td><td contenteditable="false">—</td><td contenteditable="false">Belén</td><td contenteditable="false">Municipio</td><td contenteditable="false">45 días de prórroga a partir de la entrega de facturas (mes vencido)</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">89838</td><td contenteditable="false">30 días</td><td contenteditable="false">—</td><td contenteditable="false">Ericka</td><td contenteditable="false">Sekura Grupo Petrolero</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">89895</td><td contenteditable="false">90 días</td><td contenteditable="false">—</td><td contenteditable="false">Belén</td><td contenteditable="false">Fiscalía</td><td contenteditable="false">Prórroga de 90 días</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">95840</td><td contenteditable="false">65 días</td><td contenteditable="false">Vto. 30 de cada mes</td><td contenteditable="false">Belén</td><td contenteditable="false">Tramos</td><td contenteditable="false">65 días de prórroga en cada recibo (mes vencido)</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">44335</td><td contenteditable="false">14 días</td><td contenteditable="false">—</td><td contenteditable="false">Belén</td><td contenteditable="false">Raspberry venta en línea</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">70663</td><td contenteditable="false">14 días</td><td contenteditable="false">—</td><td contenteditable="false">Belén</td><td contenteditable="false">Cortina Cartera General</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">83821</td><td contenteditable="false">14 días</td><td contenteditable="false">—</td><td contenteditable="false">Belén</td><td contenteditable="false">Ruben Hdz Cartera General</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">23825</td><td contenteditable="false">90 días</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">Xignux Arrendados Consolidado</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">79604</td><td contenteditable="false">14 días</td><td contenteditable="false">—</td><td contenteditable="false">Lesli</td><td contenteditable="false">Odessa</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">89357</td><td contenteditable="false">14 días</td><td contenteditable="false">—</td><td contenteditable="false">Ericka</td><td contenteditable="false">Isabel Gómez Ríos</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">26202</td><td contenteditable="false">14 días</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">Reigers Agte. de Seg. y de Fzas. S.A. de C.V.</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">26760</td><td contenteditable="false">45 días</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">Yturria Agente de Seguros, S.A. de C.V.</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">25083</td><td contenteditable="false">14 días</td><td contenteditable="false">—</td><td contenteditable="false">Belén</td><td contenteditable="false">Yamarc</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">27814</td><td contenteditable="false">60 días</td><td contenteditable="false">—</td><td contenteditable="false">Ericka</td><td contenteditable="false">Senda Empleados</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">27815</td><td contenteditable="false">60 días</td><td contenteditable="false">—</td><td contenteditable="false">Ericka</td><td contenteditable="false">Senda Oficiales</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">29342</td><td contenteditable="false">60 días</td><td contenteditable="false">—</td><td contenteditable="false">Ericka</td><td contenteditable="false">Seguridad Privada General Beni Gnos, S.A. de C.V.</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">29437</td><td contenteditable="false">30 días</td><td contenteditable="false">PEMEX</td><td contenteditable="false">Edith</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">22943</td><td contenteditable="false">30 días</td><td contenteditable="false">Multicotizador</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">26183</td><td contenteditable="false">45 días</td><td contenteditable="false">Monto Domiciliados</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">26600</td><td contenteditable="false">45 días</td><td contenteditable="false">Monto DXN</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">29520</td><td contenteditable="false">90 días</td><td contenteditable="false">Xignux Oficiales</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">29521</td><td contenteditable="false">90 días</td><td contenteditable="false">Xignux Empleados</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">29522</td><td contenteditable="false">90 días</td><td contenteditable="false">Xignux Contado</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">29523</td><td contenteditable="false">90 días</td><td contenteditable="false">Xignux Alta Gama (Ejecutivos)</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">29525</td><td contenteditable="false">90 días</td><td contenteditable="false">Xignux Arrendados</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">29526</td><td contenteditable="false">90 días</td><td contenteditable="false">Prolec Empleados</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">29527</td><td contenteditable="false">90 días</td><td contenteditable="false">Prolec Oficiales y Arrendados</td><td contenteditable="false">Edith</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">87710</td><td contenteditable="false">14 días</td><td contenteditable="false">Yturria</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">29437</td><td contenteditable="false">120 días</td><td contenteditable="false">Grupo PYLC Agente de Seguros y de Fianzas, S.A. de C.V.</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">1200342</td><td contenteditable="false">30 días</td><td contenteditable="false">Tupy Empleados</td><td contenteditable="false">Belén</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">1200010</td><td contenteditable="false">90 días</td><td contenteditable="false">Prolec Contado</td><td contenteditable="false">Edith</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">1200344</td><td contenteditable="false">60 días</td><td contenteditable="false">NGK Oficiales</td><td contenteditable="false">Ericka</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">1200345</td><td contenteditable="false">60 días</td><td contenteditable="false">NGK Empleados</td><td contenteditable="false">Ericka</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+              <tr><td class="mono" contenteditable="false">1200622</td><td contenteditable="false">60 días</td><td contenteditable="false">Flotillas Chavana</td><td contenteditable="false">Ericka</td><td contenteditable="false">—</td><td contenteditable="false">—</td><td contenteditable="false">—</td></tr>
+            </tbody>
+          </table>
+          </div>
+          <div class="callout callout-warn" style="margin-top:14px;">
+            <span class="cico">⚠️</span>
+            <div><h4>Nota de fuente</h4><p>Algunas filas del archivo original traen datos desalineados (por ejemplo, el nombre del cliente aparece en la columna de "fecha de notificación"). Se muestran tal como están en el documento fuente — si tienes duda sobre un agente en particular, confírmalo con tu ejecutivo antes de aplicar una excepción.</p></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= ACCESOS ================= -->
+      <section class="view" id="view-accesos">
+        <div class="view-head">
+          <div class="eyebrow">Cheat sheet</div>
+          <h1>Accesos rápidos y glosario</h1>
+          <p>Las rutas de menú y los términos que vas a teclear y leer todos los días.</p>
+        </div>
+
+        <div class="card hide" data-searchable="" data-search="rutas de menu caja imputacion aplicacion remesas cierre diario depositos bancarios ficha electronica confirmacion reimpresion caratulas aplicaciones consulta sistema analisis autorizacion deducibles domiciliacion cargo automatico busqueda recibos listado pagado agente pago manual ordenes de pago confirmaciones bancarias tesoreria recibos de pago siniestros estimaciones cfdi email">
+          <h3>🧭 Rutas de menú — módulo Caja (opción 8)</h3>
+          <div class="path-row"><span class="path-label">Imputación de Caja Ingresos</span><span class="chip">8 <span class="arrow">→</span> 1</span></div>
+          <div class="path-row"><span class="path-label">Aplicación de Remesas</span><span class="chip">8 <span class="arrow">→</span> 2</span></div>
+          <div class="path-row"><span class="path-label">Cierre Diario de Caja Ingresos</span><span class="chip">8 <span class="arrow">→</span> 3</span></div>
+          <div class="path-row"><span class="path-label">Depósitos Bancarios (ficha electrónica)</span><span class="chip">8 <span class="arrow">→</span> 4</span></div>
+          <div class="path-row"><span class="path-label">Confirmación de Depósitos</span><span class="chip">8 <span class="arrow">→</span> 5</span></div>
+          <div class="path-row"><span class="path-label">Reimpresión de Carátulas de Ingreso</span><span class="chip">8 <span class="arrow">→</span> 6</span></div>
+          <div class="path-row"><span class="path-label">Reimpresión de Aplicaciones</span><span class="chip">8 <span class="arrow">→</span> 7</span></div>
+          <div class="path-row"><span class="path-label">Consulta de Carátulas</span><span class="chip">8 <span class="arrow">→</span> 8</span></div>
+          <div class="path-row"><span class="path-label">Sistema de Análisis</span><span class="chip">8 <span class="arrow">→</span> 9</span></div>
+          <div class="path-row"><span class="path-label">Autorización Automática de Ingreso de Deducibles</span><span class="chip">8 <span class="arrow">→</span> 10</span></div>
+          <div class="path-row"><span class="path-label">Consulta de Pólizas en Domiciliación/Cargo Automático</span><span class="chip">8 <span class="arrow">→</span> 11</span></div>
+          <div class="path-row"><span class="path-label">Búsqueda de recibos Póliza</span><span class="chip">8 <span class="arrow">→</span> 12</span></div>
+          <div class="path-row"><span class="path-label">Listado de Pagado por Agente</span><span class="chip">8 <span class="arrow">→</span> 13</span></div>
+          <div class="path-row"><span class="path-label">Autorización de Pago Manual</span><span class="chip">8 <span class="arrow">→</span> 14</span></div>
+          <div class="path-row"><span class="path-label">Consulta de Órdenes de Pago</span><span class="chip">8 <span class="arrow">→</span> 15</span></div>
+          <div class="path-row"><span class="path-label">Confirmaciones Bancarias en Línea Tesorería</span><span class="chip">8 <span class="arrow">→</span> 16</span></div>
+          <div class="path-row"><span class="path-label">Consulta de recibos de Pago</span><span class="chip">8 <span class="arrow">→</span> 17</span></div>
+          <div class="path-row"><span class="path-label">Consulta de Estimaciones Históricas (siniestros)</span><span class="chip">2 <span class="arrow">→</span> 5 <span class="arrow">→</span> 4</span></div>
+          <div class="path-row"><span class="path-label">Envío de Documentos CFDI vía Email</span><span class="chip">6 <span class="arrow">→</span> 6 <span class="arrow">→</span> 6</span></div>
+        </div>
+
+        <div class="card hide" data-searchable="" data-search="glosario sise remesa caratula cie rap cep abono entidad receptor d r c e qs-10 faltante sobrante ejercicio siniestro inciso endoso opl tesoreria">
+          <h3>📚 Glosario</h3>
+          <div class="gloss-item"><div class="gloss-term">SISE</div><div class="gloss-def">Sistema operativo de Quálitas donde se hacen consultas, emisión, siniestros y Caja.</div></div>
+          <div class="gloss-item"><div class="gloss-term">Remesa / Carátula</div><div class="gloss-def">Número que agrupa los pagos capturados al hacer Imputación de Caja Ingresos; se usa después para aplicarla.</div></div>
+          <div class="gloss-item"><div class="gloss-term">CIE / RAP / CEP / Abono</div><div class="gloss-def">Nombres que dan distintos bancos a su servicio de pago referenciado (Bancomer = CIE, HSBC = RAP, Banorte = CEP, Banamex = Abono, Scotiabank = "Cobranza con recibo").</div></div>
+          <div class="gloss-item"><div class="gloss-term">Entidad / Receptor</div><div class="gloss-def">Códigos para validar un cheque: Entidad = banco emisor, Receptor = banco beneficiario (Quálitas).</div></div>
+          <div class="gloss-item"><div class="gloss-term">C / E</div><div class="gloss-def">En la ficha electrónica: Cheque o Efectivo — la forma en que se hizo el depósito.</div></div>
+          <div class="gloss-item"><div class="gloss-term">D / R</div><div class="gloss-def">En la ficha electrónica: Depositado en firme, o Rechazado/devuelto en ventanilla.</div></div>
+          <div class="gloss-item"><div class="gloss-term">QS-10</div><div class="gloss-def">Formato con el que Siniestros, Comercial o el Asegurado solicitan a Caja el ingreso de un deducible o recupero.</div></div>
+          <div class="gloss-item"><div class="gloss-term">Faltante / Sobrante</div><div class="gloss-def">Diferencia tolerada al aplicar una remesa: máximo ±$10.00, registrada en cuentas contables específicas.</div></div>
+          <div class="gloss-item"><div class="gloss-term">Cuenta concentradora</div><div class="gloss-def">Cuenta CLABE de la compañía usada para pagos vencidos o devoluciones — no se aplica automático, requiere comprobante a Tesorería.</div></div>
+        </div>
+      </section>
+
+    </div>
+
+    <footer>Guía interna de referencia — Caja SISE · Atención Operativa · Elaborada a partir del material de capacitación</footer>
+  </main>
+</div>
+
+<script>
+  // ---------- Tab navigation ----------
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const views = document.querySelectorAll('.view');
+  const pageTitle = document.getElementById('pageTitle');
+  const titles = {
+    inicio:'Inicio', cuentas:'Cuentas bancarias', documentacion:'Documentación',
+    proceso:'Proceso Caja SISE', notas:'Notas clave', agentes:'Agentes · Periodo de gracia', accesos:'Accesos y glosario'
+  };
+  tabBtns.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const target = btn.dataset.view;
+      tabBtns.forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      views.forEach(v=>v.classList.remove('active'));
+      document.getElementById('view-'+target).classList.add('active');
+      pageTitle.textContent = titles[target];
+      document.querySelector('.content').scrollTo?.(0,0);
+      window.scrollTo({top:0, behavior:'smooth'});
+      document.getElementById('sidebar').classList.remove('open');
+      if(searchInput.value.trim()){
+        searchInput.value = '';
+        runSearch();
+      }
+    });
+  });
+  window.goToView = function(target, stepId){
+    const btn = document.querySelector('.tab-btn[data-view="'+target+'"]');
+    if(btn) btn.click();
+    if(stepId){
+      setTimeout(()=>{
+        const el = document.getElementById(stepId);
+        if(el){
+          el.scrollIntoView({behavior:'smooth', block:'center'});
+          if(!el.classList.contains('open')) el.querySelector('.step-head').click();
+        }
+      }, 120);
+    }
+  };
+
+  // ---------- Mobile menu ----------
+  document.getElementById('menuToggle').addEventListener('click', ()=>{
+    document.getElementById('sidebar').classList.toggle('open');
+  });
+
+  // ---------- Accordion steps ----------
+  document.querySelectorAll('.step-head').forEach(head=>{
+    head.addEventListener('click', ()=>{
+      const step = head.parentElement;
+      const body = step.querySelector('.step-body');
+      const isOpen = step.classList.contains('open');
+      if(isOpen){
+        step.classList.remove('open');
+        body.style.maxHeight = null;
+      } else {
+        step.classList.add('open');
+        body.style.maxHeight = body.scrollHeight + 'px';
+      }
+    });
+  });
+
+  // ---------- Process map ----------
+  const mapSteps = [
+    {n:1, label:'Recepción de pago', sub:'validaciones'},
+    {n:2, label:'Revisión de vigencias', sub:'12:00 hrs · 60 días'},
+    {n:3, label:'Reglas de aplicación', sub:'notas de crédito'},
+    {n:4, label:'Generación de remesa', sub:'8 → 1'},
+    {n:5, label:'Aplicación de remesa', sub:'8 → 2'},
+    {n:6, label:'Cierre diario', sub:'8 → 3'},
+    {n:7, label:'Ficha electrónica', sub:'8 → 4'},
+    {n:8, label:'Deducibles / recuperos', sub:'QS-10'},
+    {n:9, label:'Consulta de aplicación', sub:'8 → 8'},
+    {n:10, label:'Código de análisis', sub:'301'},
+    {n:11, label:'Envío de factura', sub:'6 → 6 → 6'}
+  ];
+  const mapEl = document.getElementById('processMap');
+  mapSteps.forEach((s,i)=>{
+    const node = document.createElement('div');
+    node.className = 'map-node';
+    node.innerHTML = `<div class="dot">${s.n}</div><div class="lbl">${s.label}</div><div class="sub">${s.sub}</div>`;
+    node.addEventListener('click', ()=> window.goToView('proceso'));
+    mapEl.appendChild(node);
+    if(i < mapSteps.length-1){
+      const line = document.createElement('div');
+      line.className = 'map-line';
+      mapEl.appendChild(line);
+    }
+  });
+
+  // ---------- Tab activation helper (used by search + map) ----------
+  function activateTab(key, {resetScroll} = {resetScroll:true}){
+    const btn = document.querySelector('.tab-btn[data-view="'+key+'"]');
+    if(!btn || btn.classList.contains('active')) return;
+    tabBtns.forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    views.forEach(v=>v.classList.remove('active'));
+    document.getElementById('view-'+key).classList.add('active');
+    pageTitle.textContent = titles[key];
+    if(resetScroll) window.scrollTo({top:0});
+    document.getElementById('sidebar').classList.remove('open');
+  }
+
+  // ---------- Search: filter + jump-to-match, works across every tab ----------
+  const searchInput = document.getElementById('searchInput');
+  const searchCount = document.getElementById('searchCount');
+  const searchNav = document.getElementById('searchNav');
+  const prevMatchBtn = document.getElementById('prevMatch');
+  const nextMatchBtn = document.getElementById('nextMatch');
+  let currentMatches = [];
+  let currentMatchIndex = -1;
+
+  function stripAccents(s){ return s.normalize('NFD').replace(/[\u0300-\u036f]/g,''); }
+
+  function clearHighlights(){
+    document.querySelectorAll('mark.hit').forEach(m=>{
+      const parent = m.parentNode;
+      parent.replaceChild(document.createTextNode(m.textContent), m);
+      parent.normalize();
+    });
+  }
+
+  function highlightInElement(el, rawQuery){
+    if(!rawQuery) return;
+    if(document.body.classList.contains('edit-mode') && el.querySelector('table')) return; // don't mangle editable cells
+    const escaped = rawQuery.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    const re = new RegExp('('+escaped+')', 'gi');
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, {
+      acceptNode(node){
+        if(!node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+        const p = node.parentElement;
+        if(!p || p.closest('mark') || ['SCRIPT','STYLE'].includes(p.tagName)) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    const nodes = [];
+    let n;
+    while((n = walker.nextNode())) nodes.push(n);
+    nodes.forEach(node=>{
+      re.lastIndex = 0;
+      if(!re.test(node.nodeValue)) return;
+      re.lastIndex = 0;
+      const frag = document.createDocumentFragment();
+      let lastIdx = 0, match;
+      while((match = re.exec(node.nodeValue))){
+        frag.appendChild(document.createTextNode(node.nodeValue.slice(lastIdx, match.index)));
+        const mark = document.createElement('mark');
+        mark.className = 'hit';
+        mark.textContent = match[0];
+        frag.appendChild(mark);
+        lastIdx = match.index + match[0].length;
+        if(match[0].length === 0) re.lastIndex++;
+      }
+      frag.appendChild(document.createTextNode(node.nodeValue.slice(lastIdx)));
+      node.parentNode.replaceChild(frag, node);
+    });
+  }
+
+  function updateCounterUI(){
+    if(currentMatches.length === 0){
+      searchCount.style.display = 'inline';
+      searchCount.textContent = searchInput.value.trim() ? '0 resultados' : '';
+      searchNav.style.display = 'none';
+      return;
+    }
+    searchCount.style.display = 'inline';
+    searchCount.textContent = (currentMatchIndex+1) + ' / ' + currentMatches.length;
+    searchNav.style.display = currentMatches.length > 1 ? 'flex' : 'none';
+  }
+
+  function goToMatch(idx){
+    if(currentMatches.length === 0) return;
+    currentMatchIndex = ((idx % currentMatches.length) + currentMatches.length) % currentMatches.length;
+    const el = currentMatches[currentMatchIndex];
+    const viewKey = el.closest('.view').id.replace('view-','');
+    activateTab(viewKey, {resetScroll:false});
+    setTimeout(()=>{
+      const step = el.closest('.step');
+      if(step && !step.classList.contains('open')) step.querySelector('.step-head').click();
+      setTimeout(()=>{
+        const marker = el.querySelector('mark.hit') || el;
+        marker.scrollIntoView({behavior:'smooth', block:'center'});
+        el.classList.add('search-target');
+        setTimeout(()=> el.classList.remove('search-target'), 2000);
+      }, step ? 220 : 20);
+    }, 30);
+    updateCounterUI();
+  }
+
+  function runSearch(){
+    const raw = searchInput.value.trim();
+    const q = stripAccents(raw.toLowerCase());
+    const items = document.querySelectorAll('[data-searchable]');
+    clearHighlights();
+
+    if(q.length === 0){
+      items.forEach(el=> el.classList.remove('hide'));
+      currentMatches = [];
+      currentMatchIndex = -1;
+      searchCount.style.display = 'none';
+      searchNav.style.display = 'none';
+      return;
+    }
+
+    currentMatches = [];
+    items.forEach(el=>{
+      const haystack = stripAccents((el.dataset.search || el.textContent).toLowerCase());
+      if(haystack.includes(q)){
+        el.classList.remove('hide');
+        currentMatches.push(el);
+        highlightInElement(el, raw);
+      } else {
+        el.classList.add('hide');
+      }
+    });
+
+    currentMatchIndex = -1;
+    updateCounterUI();
+    if(currentMatches.length > 0) goToMatch(0);
+  }
+
+  searchInput.addEventListener('input', runSearch);
+  searchInput.addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter'){ e.preventDefault(); goToMatch(currentMatchIndex + 1); }
+  });
+  prevMatchBtn.addEventListener('click', ()=> goToMatch(currentMatchIndex - 1));
+  nextMatchBtn.addEventListener('click', ()=> goToMatch(currentMatchIndex + 1));
+
+  // ---------- Editable tables ----------
+  const editToggle = document.getElementById('editToggle');
+  const allCells = document.querySelectorAll('table td');
+  let editModeOn = false;
+  function setEditMode(on){
+    editModeOn = on;
+    document.body.classList.toggle('edit-mode', on);
+    allCells.forEach(td=> td.contentEditable = on ? 'true' : 'false');
+    editToggle.classList.toggle('active', on);
+    editToggle.textContent = on ? '✅ Editando tablas' : '✏️ Editar tablas';
+    if(on) clearHighlights();
+  }
+  setEditMode(false);
+  editToggle.addEventListener('click', ()=> setEditMode(!editModeOn));
+
+  // ---------- Download edited copy ----------
+  document.getElementById('downloadBtn').addEventListener('click', ()=>{
+    clearHighlights();
+    const wasEditing = editModeOn;
+    if(wasEditing) setEditMode(false);
+    const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+    const blob = new Blob([html], {type:'text/html'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const stamp = new Date().toISOString().slice(0,10);
+    a.href = url;
+    a.download = 'guia-caja-sise-editada-'+stamp+'.html';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    if(wasEditing) setEditMode(true);
+  });
+</script>
+
+
+</body></html>
